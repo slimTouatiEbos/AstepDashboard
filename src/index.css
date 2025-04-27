@@ -1,0 +1,155 @@
+@import 'antd/dist/reset.css';
+
+/* Heading style for the sensor name */
+.radial-chart-container h3 {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 1.2rem;
+  color: #39539e;
+  /* Use your theme color */
+}
+
+/* Carousel previous/next buttons */
+.carousel-prev,
+.carousel-next {
+  color: #0084ff;
+  /* Theme color for arrows */
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* Hover effect for carousel arrows */
+.carousel-prev:hover,
+.carousel-next:hover {
+  color: #39539e;
+  /* Darker shade on hover */
+}
+
+/* Additional styling for carousel container */
+.ant-carousel .slick-track {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+/* Styling for slider container (if applicable in other parts of the project) */
+.slider-container {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  position: relative;
+}
+/* Ensure images fit within the slides */
+.slick-slide img {
+  max-width: 100%;
+  height: auto;
+}
+/* Style the previous and next arrows for Slider */
+.slick-prev,
+.slick-next {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+/* Position the left arrow */
+.slick-prev {
+  left: 10px;
+}
+
+/* Position the right arrow */
+.slick-next {
+  right: 10px;
+}
+
+/* Arrow hover effect */
+.slick-prev:hover,
+.slick-next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  /* Darker background on hover */
+}
+
+/* Style for the chart item (the MandrekasRadialCharts components inside the slider) */
+.chart-item {
+  margin: 0 15px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Hover effect for chart items */
+.chart-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Style for the selected sensors in the Select input */
+.ant-select-selector {
+  background-color: #ffffff !important;
+  /*  border: 1px solid #39539e !important; */
+  color: #39539e !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+}
+
+/* Custom dropdown option styling */
+.ant-select-item {
+  padding: 8px;
+  background-color: #ffffff;
+  color: #39539e;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+/* Hover effect for dropdown options */
+.ant-select-item:hover {
+  background-color: #1ab7ea;
+  color: rgb(57, 83, 158);
+  cursor: pointer;
+}
+/* Styling for the selected option i n the dropdown */
+.ant-select-item-option-selected {
+  background-color: #0084ff;
+  color: #ffffff;
+}
+/* Custom scrollbar styling for dropdown */
+/*  .ant-select-dropdown {
+                    border-radius: 8px;
+                    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                    max-height: 200px;
+                    overflow-y: auto;
+} */
+
+/* Custom color for input */
+.ant-select-selection-item {
+  color: #39539e !important;
+}
+
+.Date-Range-Picker {
+  width: 50%;
+  margin-bottom: 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .Date-Range-Picker {
+    width: 100%;
+    /* margin-bottom: 10px; */
+  }
+}
+
+/*  @media (max-width: 480px) {
+    .my-element {
+      width: 90%;
+      margin-bottom: 15px;
+    }
+  } */

@@ -1,0 +1,93 @@
+// Here you can add other styles
+// select {
+//     -webkit-appearance: none;
+//     -moz-appearance: none;
+//     text-indent: 1px;
+//     text-overflow: '';
+//     padding: 0px 5px;
+//     text-align: center;
+//   }
+
+.measurementsTable {
+    width: 100%;
+
+    @include media-breakpoint-up(md) {
+        width: 50vw;
+    }
+}
+.AuthCard {
+    width: 100%;
+    margin-top: 100px;
+
+    @include media-breakpoint-up(md) {
+            width: 70%;
+            height: 100%;
+            display: flex;
+            @include media-breakpoint-up(sm) {
+                    width: 45%;
+                    height: 100%;
+                    display: flex;
+                        margin-top: 0;
+                    }
+                    }
+}
+.AuthImage {
+    // visibility: hidden;
+    height: 5%;
+    display: none;
+
+    @include media-breakpoint-up(md) {
+        //  visibility: visible;
+        width: 55vw;
+        display: unset;
+    }
+}
+
+.AuthPage {
+    flex-direction: column;
+    height: auto;
+
+    @include media-breakpoint-up(sm) {
+        flex-direction: row;
+        height: 100vh;
+    }
+}
+.HeaderElementToHide {
+    display: none;
+
+@include media-breakpoint-up(sm) {
+        display: unset;
+    }
+}
+
+.HomeCardsContainer {
+    display: flex;
+    gap: 25px;
+    //  flex-wrap: wrap;
+    align-items: center;
+    flex-direction: column;
+
+    @include media-breakpoint-up(sm) {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        justify-content: start;
+        flex-direction: row;
+    }
+}
+
+.WelcomeAndSearch {
+    flex-direction: column;
+
+    @include media-breakpoint-up(sm) {
+        flex-direction: row;
+    }
+}
+
+.SearchGlobal {
+    width: 100%;
+
+    @include media-breakpoint-up(sm) {
+        width: 30%;
+    }
+}

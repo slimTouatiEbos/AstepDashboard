@@ -1,0 +1,36 @@
+// If you want to override variables do it here
+@import "variables";
+
+$spacer: 1rem !default;
+$spacers: (
+    0: 0,
+    1: $spacer / 4,
+    2: $spacer / 2,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 3,
+    ) !default;
+
+
+$sidebar-nav-link-padding-y: 5px !default;
+//$sidebar-nav-link-margin-y: .10px;
+//$sidebar-footer-height: 3rem !default;
+//$footer-height: 3rem !default;
+$sidebar-footer-padding-y: $spacer/2 !default;
+$sidebar-footer-padding-x: $spacer !default;
+$enable-ltr: true;
+$enable-rtl: true;
+
+
+// Import CoreUI for React components library
+@import "@coreui/coreui/scss/coreui";
+
+// Import Chart.js custom tooltips styles
+@import "@coreui/chartjs/scss/coreui-chartjs";
+
+@import "layout";
+@import "example";
+
+// If you want to add custom CSS you can put it here.
+@import "custom";
+
