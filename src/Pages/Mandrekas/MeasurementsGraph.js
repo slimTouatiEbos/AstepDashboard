@@ -40,6 +40,15 @@ const MeasurementsGraph = (props) => {
           fontFamily: undefined,
         },
       },
+      // tooltip: {
+      //         marker: { show: true },       // ensure the marker is shown
+      //          items: {
+      //            display: 'flex',            // keep flex layout…
+      //            alignItems: 'center',       // …and vertically centre
+      //            gap: '6px'                  // ← here’s your margin
+      //          }
+      //        }
+        
     },
   })
   useEffect(() => {
