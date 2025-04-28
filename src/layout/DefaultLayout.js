@@ -2,13 +2,15 @@ import React, { useEffect } from 'react'
 import { AppContent, AppSidebar, AppHeader } from '../components/index'
 import AppContentHeader from 'src/components/AppContentHeader'
 import useMeasurementService from 'src/services/measurementsServices';
+import { useDispatch } from 'react-redux';
+import { fetchInitialMeasurements } from 'src/redux/actions/measurementActions';
 
 //zid lena ta3yitet l data lkol
 const DefaultLayout = () => {
+  const dispatch=useDispatch()
   const { getMeasurement_Service } = useMeasurementService();
   useEffect(() => {
-    
-    getMeasurement_Service(1, "2020-01-01", "2026-01-01");
+    dispatch(    fetchInitialMeasurements())
   },[]);
   return (
     <div>

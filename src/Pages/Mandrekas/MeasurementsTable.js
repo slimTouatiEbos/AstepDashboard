@@ -1,31 +1,44 @@
-import React, { useEffect, useState } from 'react'
-import { Space, Table, Tag } from 'antd'
-import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
-import { getSensorList, getSourceList } from './MandrekasHelpers'
+import React, { useEffect, useState } from 'react';
+import { Space, Table, Tag, Spin } from 'antd';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSensorList, getSourceList } from './MandrekasHelpers';
 
 const MeasurementsTable = (props) => {
-  const dispatch = useDispatch()
-  const [SensorList, setSensorList] = useState([])
-  const [SourceList, setSourceList] = useState([])
+  const dispatch = useDispatch();
+  const [SensorList, setSensorList] = useState([]);
+  const [SourceList, setSourceList] = useState([]);
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
       pageSize: 5,
       pageSizeOptions: [5, 10],
     },
-  })
+  });
+
+  // Get loading states from Redux store
+  const { 
+    mandrekas: { loading: mandrekasLoading }, 
+    arcelormittal: { loading: arcelormittalLoading } 
+  } = useSelector((state) => state.measurement);
+
+  // Determine loading state based on current route
+  const isLoading = () => {
+    const path = window.location.pathname.toLowerCase();
+    if (path.includes('mandrekas')) return mandrekasLoading;
+    if (path.includes('arcelormittal')) return arcelormittalLoading;
+    return mandrekasLoading || arcelormittalLoading;
+  };
 
   const columns = [
     {
       title: 'Date & Time',
       dataIndex: 'timestamp',
       render: (record) => {
-        let tmstmp = new Date(record)
-        let text = tmstmp.toLocaleString('en-US')
-        return <p>{text}</p>
+        let tmstmp = new Date(record);
+        let text = tmstmp.toLocaleString('en-US');
+        return <p>{text}</p>;
       },
-      // Apply styles for column header
       onHeaderCell: () => ({
         style: {
           backgroundColor: '#3c4b64',
@@ -41,7 +54,6 @@ const MeasurementsTable = (props) => {
       title: 'Sensor',
       dataIndex: 'sensor',
       render: (text) => <span style={{ color: '#0084ff' }}>{text}</span>,
-      // Apply styles for column header
       onHeaderCell: () => ({
         style: {
           backgroundColor: '#3c4b64',
@@ -57,7 +69,6 @@ const MeasurementsTable = (props) => {
       title: 'Measurement',
       dataIndex: 'measurement',
       render: (text) => <Tag color="#ffc300">{text}</Tag>,
-      // Apply styles for column header
       onHeaderCell: () => ({
         style: {
           backgroundColor: '#3c4b64',
@@ -74,7 +85,6 @@ const MeasurementsTable = (props) => {
       dataIndex: 'source',
       responsive: ['sm'],
       render: (text) => <Tag color="#39539E">{text}</Tag>,
-      // Apply styles for column header
       onHeaderCell: () => ({
         style: {
           backgroundColor: '#3c4b64',
@@ -86,46 +96,45 @@ const MeasurementsTable = (props) => {
         },
       }),
     },
-  ]
+  ];
 
-  const [TableData, setTableData] = useState(props.tableData)
+  const [TableData, setTableData] = useState(props.tableData);
 
   const handleTableChange = (pagination, filters, sorter, extra) => {
     setTableParams({
       pagination,
       filters,
       ...sorter,
-    })
-    dispatch({ type: 'set', mandrekaTablePage: pagination.current })
-    props.setCurrentTableData(extra.currentDataSource)
-  }
+    });
+    dispatch({ type: 'set', mandrekaTablePage: pagination.current });
+    props.setCurrentTableData(extra.currentDataSource);
+  };
 
   useEffect(() => {
-    dispatch({ type: 'set', mandrekaTablePage: 1 })
-    props.setCurrentTableData(props.tableData)
-  }, [])
+    dispatch({ type: 'set', mandrekaTablePage: 1 });
+    props.setCurrentTableData(props.tableData);
+  }, []);
 
-  useEffect(() => setTableData(props.tableData), [props.tableData])
+  useEffect(() => setTableData(props.tableData), [props.tableData]);
   useEffect(
     () =>
       setSensorList(
         getSensorList(props.tableData)?.map((item) => {
-          return { text: item, value: item }
+          return { text: item, value: item };
         }),
       ),
     [props.tableData],
-  )
+  );
 
   useEffect(() => {
     setSourceList(
       getSourceList(props.tableData)?.map((item) => {
-        return { text: item, value: item }
+        return { text: item, value: item };
       }),
-    )
-    setTableData(props.tableData)
-  }, [props.tableData])
+    );
+    setTableData(props.tableData);
+  }, [props.tableData]);
 
-  // Custom Styles using the provided theme colors
   const customStyles = {
     table: {
       width: '100%',
@@ -190,47 +199,55 @@ const MeasurementsTable = (props) => {
       padding: '10px',
       backgroundColor: '#fff',
     },
-  }
+  };
 
   return (
-    <div style={customStyles.tableWrapper}>
-      <Table
-        columns={columns}
-        dataSource={TableData?.map((item, index) => {
-          return { key: index, ...item }
-        })}
-        pagination={{
-          ...tableParams.pagination, // spreading pagination settings
-          position: ['bottomCenter'],
-          itemRender: (current, type, originalElement) => {
-            if (type === 'prev') {
-              return <a style={customStyles.paginationButton}>Prev</a>
-            }
-            if (type === 'next') {
-              return <a style={customStyles.paginationButton}>Next</a>
-            }
-            return originalElement
-          },
-        }}
-        onChange={handleTableChange}
-        style={customStyles.table}
-        scroll={{
-          x: 'max-content',
-        }}
-        rowClassName="custom-row" // Remove duplicate rowClassName prop
-        locale={{
-          emptyText: 'No Data Available',
-        }}
-        bordered
-      />
-    </div>
-  )
-}
-
-export default MeasurementsTable
+    <Spin 
+      spinning={isLoading()} 
+      tip="Loading data..." 
+      size="large"
+      style={{ maxHeight: 'none' }} // Prevents Spin from collapsing table height
+    >
+      <div style={customStyles.tableWrapper}>
+        <Table
+          columns={columns}
+          dataSource={TableData?.map((item, index) => {
+            return { key: index, ...item };
+          })}
+          pagination={{
+            ...tableParams.pagination,
+            position: ['bottomCenter'],
+            itemRender: (current, type, originalElement) => {
+              if (type === 'prev') {
+                return <a style={customStyles.paginationButton}>Prev</a>;
+              }
+              if (type === 'next') {
+                return <a style={customStyles.paginationButton}>Next</a>;
+              }
+              return originalElement;
+            },
+          }}
+          onChange={handleTableChange}
+          style={customStyles.table}
+          scroll={{
+            x: 'max-content',
+          }}
+          rowClassName="custom-row"
+          locale={{
+            emptyText: 'No Data Available',
+          }}
+          bordered
+          loading={isLoading()} // Additional loading indicator in table
+        />
+      </div>
+    </Spin>
+  );
+};
 
 MeasurementsTable.propTypes = {
-  tableData: PropTypes.any,
-  CurrentTableData: PropTypes.any,
-  setCurrentTableData: PropTypes.any,
-}
+  tableData: PropTypes.array,
+  CurrentTableData: PropTypes.array,
+  setCurrentTableData: PropTypes.func,
+};
+
+export default MeasurementsTable;
