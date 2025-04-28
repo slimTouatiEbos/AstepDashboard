@@ -21,9 +21,13 @@ export const fetchMeasurementsAction = (querystring) => async (dispatch, getStat
       const singleSourceParams = new URLSearchParams(urlParams);
       singleSourceParams.set('source', source);
       
+      // const response = await axios.get(
+      //   `${apiURL}/api/data/measurements?${singleSourceParams.toString()}`
+      // );
       const response = await axios.get(
-        `${apiURL}/api/data/measurements?${singleSourceParams.toString()}`
+        `api/measurements?${singleSourceParams.toString()}`
       );
+      
       
       if (Array.isArray(response.data)) {
         responseData = [...responseData, ...response.data];

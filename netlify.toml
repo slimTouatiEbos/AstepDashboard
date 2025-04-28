@@ -1,0 +1,7 @@
+[[redirects]]
+  # Match anything under /api/*
+  from   = "/api/*"
+  # Forward it to your HTTP endpoint, preserving the “splat” (the part after /api/)
+  to     = "http://wrel.speedyns.net:8261/astepapi/api/data/:splat"
+  status = 200
+  force  = true
