@@ -5,3 +5,8 @@
   to     = "http://wrel.speedyns.net:8261/astepapi/api/data/:splat"
   status = 200
   force  = true
+
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
