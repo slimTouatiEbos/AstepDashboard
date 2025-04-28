@@ -13,7 +13,7 @@ import {
 } from '../constants/measurementConstants';
 
 const apiURL = 'http://wrel.speedyns.net:8261/astepapi';
-
+const devapiUrl = 'api/measurements?';
 
 export const fetchMeasurementsAction = (querystring) => async (dispatch) => {
   dispatch({ type: GET_MEASUREMENTS_REQUEST });
@@ -34,14 +34,16 @@ export const fetchMeasurementsAction = (querystring) => async (dispatch) => {
         const newParams = new URLSearchParams(querystring);
         newParams.set('source', source);
         
-        const response = await axios.get(`${apiURL}/api/data/measurements?${newParams.toString()}`);
+       // const response = await axios.get(`${apiURL}/api/data/measurements?${newParams.toString()}`);
+       const response = await axios.get(`api/measurements?${newParams.toString()}`);
         responses = responses.concat(response.data);
         console.log("resp:",responses)
 
       }
     } else {
       // If no sources specified, make the call as is
-      const response = await axios.get(`${apiURL}/api/data/measurements?${querystring}`);
+      const response = await axios.get(`/api/measurements?${querystring}`);
+     // const response = await axios.get(`${apiURL}/api/data/measurements?${querystring}`);
       responses = response.data;
     }
 
@@ -71,8 +73,10 @@ export const fetchInitialMeasurements = (queryString = '') => async (dispatch) =
     dispatch({ type: GET_ARCELORMITTAL_REQUEST });
     
     const [mandrekasResponse, arcelormittalResponse] = await Promise.all([
-      axios.get(`${apiURL}/api/data/measurements?source=1&${params}`),
-      axios.get(`${apiURL}/api/data/measurements?source=2&${params}`)
+      axios.get(`${devapiUrl}source=1&${params}`),
+      axios.get(`${devapiUrl}source=2&${params}`)
+      // axios.get(`${apiURL}/api/data/measurements?source=1&${params}`),
+      // axios.get(`${apiURL}/api/data/measurements?source=2&${params}`)
     ]);
     
     dispatch({ type: GET_MANDREKAS_SUCCESS, payload: mandrekasResponse.data });
