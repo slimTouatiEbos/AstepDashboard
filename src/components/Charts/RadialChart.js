@@ -85,6 +85,7 @@ const RadialChart = ({ labels, series }) => {
           })}
         />
       </div>
+
       {/* Center text: show only hovered ring’s title and value; otherwise, show all */}
       <div
         style={{
@@ -101,23 +102,29 @@ const RadialChart = ({ labels, series }) => {
         }}
       >
         {hoveredIndex !== null ? (
-          <div style={{ fontSize: 16, color: colors[hoveredIndex], fontWeight: 'bold' }}>
+          <div style={{ fontSize: 14, color: colors[hoveredIndex], fontWeight: 'bold' }}>
             {labels && labels[hoveredIndex]
-              ? `${labels[hoveredIndex]}: ${rawSeries[hoveredIndex]}`
+              ? `${labels[hoveredIndex]}: ${rawSeries[hoveredIndex]} °C`
               : `${hoveredIndex === 0 ? 'Max' : hoveredIndex === 1 ? 'Avg' : 'Min'}: ${
                   rawSeries[hoveredIndex]
-                }`}
+                } °C`}
           </div>
         ) : (
           <>
-            <div style={{ fontSize: 14, color: colors[0], marginBottom: 3, fontWeight: 'bold' }}>
-              {labels && labels[0] ? `${labels[0]}: ${rawSeries[0]}` : `Max: ${rawSeries[0]}`}
+            <div style={{ fontSize: 12, color: colors[0], marginBottom: 3, fontWeight: 'bold' }}>
+              {labels && labels[0]
+                ? `${labels[0]}: ${rawSeries[0]} °C`
+                : `Max: ${rawSeries[0]} °C`}
             </div>
-            <div style={{ fontSize: 14, color: colors[1], marginBottom: 3, fontWeight: 'bold' }}>
-              {labels && labels[1] ? `${labels[1]}: ${rawSeries[1]}` : `Avg: ${rawSeries[1]}`}
+            <div style={{ fontSize: 12, color: colors[1], marginBottom: 3, fontWeight: 'bold' }}>
+              {labels && labels[1]
+                ? `${labels[1]}: ${rawSeries[1]} °C`
+                : `Avg: ${rawSeries[1]} °C`}
             </div>
-            <div style={{ fontSize: 14, color: colors[2], fontWeight: 'bold' }}>
-              {labels && labels[2] ? `${labels[2]}: ${rawSeries[2]}` : `Min: ${rawSeries[2]}`}
+            <div style={{ fontSize: 12, color: colors[2], fontWeight: 'bold' }}>
+              {labels && labels[2]
+                ? `${labels[2]}: ${rawSeries[2]} °C`
+                : `Min: ${rawSeries[2]} °C`}
             </div>
           </>
         )}

@@ -66,6 +66,7 @@ function AllSensorsMinMaxAvgBarChart(props) {
         colors: ['transparent'],
       },
       xaxis: {
+        title: { text: 'Sensor' },
         categories: props.ChartData?.slice(0, 5).map((item) => item?.sensor),
         labels: {
           style: {
@@ -80,6 +81,7 @@ function AllSensorsMinMaxAvgBarChart(props) {
         },
       },
       yaxis: {
+        title: { text: 'Mesurements (°C)' },
         labels: {
           style: {
             fontSize: '12px',
@@ -98,7 +100,7 @@ function AllSensorsMinMaxAvgBarChart(props) {
       tooltip: {
         y: {
           formatter: function (val) {
-            return `${val}`
+            return `${val} °C`
           },
         },
       },

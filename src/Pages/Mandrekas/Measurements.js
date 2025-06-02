@@ -11,10 +11,17 @@ import {
   getSensorList,
   getSourceList,
 } from './MandrekasHelpers'
-//import { JSONdata } from './Dummydata'
 import { useSelector } from 'react-redux'
 import { DatePicker, Space } from 'antd'
-import { CCard, CCardBody, CCardHeader, CCol, CContainer, CRow } from '@coreui/react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CContainer,
+  CRow,
+  CButton,            // <-- import CButton here
+} from '@coreui/react'
 import MandrekasFilterComponent from './MandrekasFilterComponent'
 import GraphFilter from './GraphFilter'
 import MandrekasRadialCharts from './RadialChartsComponents/MandrekasRadialCharts'
@@ -24,6 +31,7 @@ import AllSensorsMinMaxAvgBarChart from './AllSensorsMinMaxAvgBarChart'
 import dayjs from 'dayjs'
 import { getMeasurement_Service } from 'src/services/measurementsServices'
 import PropTypes from 'prop-types'
+
 const { RangePicker } = DatePicker
 
 function Measurements(props) {
@@ -36,7 +44,6 @@ function Measurements(props) {
   const [GraphFilterSensorsList, setGraphFilterSensorsList] = useState()
   const [RadialChartsFilterSensorList, setRadialChartsFilterSensorList] = useState([])
   const [AllSensorsMinMaxAvgData, setAllSensorsMinMaxAvgData] = useState([])
-
 
   useEffect(() => setTableData(getMeasurementTableData(JSONdata)), [JSONdata])
   useEffect(() => {
@@ -52,21 +59,29 @@ function Measurements(props) {
       setRadialChartsFilterSensorList([])
     }
   }, [TableData])
-
   useEffect(() => {
-    setAllSensorsMinMaxAvgData(getAllSensorsMinMaxAvgDataData(getSensorList(TableData), TableData))
-    // getAllSensorsMinMaxAvgDataData(SensorsList, JSONdata)
+    setAllSensorsMinMaxAvgData(
+      getAllSensorsMinMaxAvgDataData(getSensorList(TableData), TableData),
+    )
   }, [TableData])
-
-  // useEffect(() => {
-  //   getMeasurement_Service(1,'2020-01-01','2026-01-01').then((response) => {
-  //     console.log(response)
-  //   })
-  // }, [])
 
   return (
     <CContainer lg>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+      {/* ====== Refresh Button at the Top ====== */}
+      <div style={{ width: '100%', textAlign: 'right', margin: '5px -5%' }}>
+        <CButton color='dark' onClick={() => window.location.reload()}>
+          Refresh
+        </CButton>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '4px',
+        }}
+      >
         <CCard
           className="measurementsTable"
           style={{
@@ -91,14 +106,16 @@ function Measurements(props) {
           </CCardHeader>
           <CCardBody>
             <CRow>
-              {props.Source !== undefined && props.Source !== null && props.Source !== '' ? (
+              {props.Source !== undefined &&
+              props.Source !== null &&
+              props.Source !== '' ? (
                 <MandrekasFilterComponent
                   setRawData={setTableData}
                   SourcesList={getSourceList(JSONdata)}
                   SensorsList={getSensorList(JSONdata)}
                   setJSONdata={setJSONdata}
                   Source={props.Source}
-                ></MandrekasFilterComponent>
+                />
               ) : (
                 <MandrekasFilterComponent
                   setRawData={setTableData}
@@ -108,17 +125,18 @@ function Measurements(props) {
                   setJSONdata={setJSONdata}
                   Source={props.Source}
                   FilterBySource={true}
-                ></MandrekasFilterComponent>
+                />
               )}
             </CRow>
             <CRow>
               <MeasurementsTable
                 tableData={TableData}
                 setCurrentTableData={setCurrentTableData}
-              ></MeasurementsTable>
+              />
             </CRow>
           </CCardBody>
         </CCard>
+
         <CCard style={{ width: '100%', marginBottom: '15px' }}>
           <CCardHeader
             style={{
@@ -139,12 +157,13 @@ function Measurements(props) {
               setGraphData={setGraphData}
               GraphData={GraphData}
               rawData={TableData}
-            ></GraphFilter>
+            />
           </CCardHeader>
           <CCardBody>
-            <MeasurementsGraph GraphData={GraphData}></MeasurementsGraph>
+            <MeasurementsGraph GraphData={GraphData} />
           </CCardBody>
         </CCard>
+
         <CCard style={{ width: '100%', marginBottom: '15px' }}>
           <CCardHeader
             style={{
@@ -159,28 +178,17 @@ function Measurements(props) {
             Min/Max/Average Measurements (all Sensors)
           </CCardHeader>
           <CCardHeader>
-            {/* <GraphFilter
-              SensorsList={GraphFilterSensorsList}
-              setSensorsList={setGraphFilterSensorsList}
-              setGraphData={setGraphData}
-              GraphData={GraphData}
-              rawData={TableData}
-            ></GraphFilter> */}
+            {/* Optional filter here if ever needed */}
           </CCardHeader>
           <CCardBody>
-            <AllSensorsMinMaxAvgBarChart
-              ChartData={AllSensorsMinMaxAvgData}
-              /*  MaxList={AllSensorsMinMaxAvgData?.map((item) => item?.max)}
-              AverageList={AllSensorsMinMaxAvgData?.map((item) => item?.average)}
-              MinList={AllSensorsMinMaxAvgData?.map((item) => item?.min)}
-              SensorsList={AllSensorsMinMaxAvgData?.map((item) => item?.sensor)} */
-            ></AllSensorsMinMaxAvgBarChart>
+            <AllSensorsMinMaxAvgBarChart ChartData={AllSensorsMinMaxAvgData} />
           </CCardBody>
         </CCard>
+
         <MandrekasRadialChartsCard
           JSONdata={TableData}
           SensorsList={RadialChartsFilterSensorList}
-        ></MandrekasRadialChartsCard>
+        />
       </div>
     </CContainer>
   )

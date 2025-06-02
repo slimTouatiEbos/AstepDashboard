@@ -72,6 +72,9 @@ const SensorMinMaxAvgBarChart = ({ max, average, min }) => {
       },
 
       xaxis: {
+        // title: {
+        //   text: 'Sensor', // <-- added x-axis title
+        // },
         categories: ['Max', 'Average', 'Min'],
         labels: {
           style: {
@@ -82,6 +85,9 @@ const SensorMinMaxAvgBarChart = ({ max, average, min }) => {
       },
 
       yaxis: {
+        title: {
+          text: 'Mesurements (°C)', // <-- added y-axis title
+        },
         labels: {
           style: {
             fontSize: '12px',
@@ -104,7 +110,7 @@ const SensorMinMaxAvgBarChart = ({ max, average, min }) => {
         },
         y: {
           formatter: function (val) {
-            return `${val}` // Show numeric values on hover
+            return `${val} °C` // Show numeric values on hover
           },
         },
       },

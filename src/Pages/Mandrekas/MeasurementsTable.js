@@ -16,6 +16,13 @@ const MeasurementsTable = (props) => {
     },
   });
 
+    // Map 1 → “Mandrekas”, 2 → “ArcelorMittal”
+    const sourceMap = {
+      1: 'Mandrekas',
+      2: 'ArcelorMittal',
+    };
+  
+
   // Get loading states from Redux store
   const { 
     mandrekas: { loading: mandrekasLoading }, 
@@ -68,8 +75,11 @@ const MeasurementsTable = (props) => {
     {
       title: 'Measurement',
       dataIndex: 'measurement',
-      render: (text) => <Tag color="#ffc300">{text}</Tag>,
-      onHeaderCell: () => ({
+      render: (value) => {
+        // Lookup the display name; default to raw value if not in map
+        const displayText = value + ' °C';
+        return <Tag color="#ffc300">{displayText}</Tag>;
+      },      onHeaderCell: () => ({
         style: {
           backgroundColor: '#3c4b64',
           color: '#fff',
@@ -84,7 +94,11 @@ const MeasurementsTable = (props) => {
       title: 'Source',
       dataIndex: 'source',
       responsive: ['sm'],
-      render: (text) => <Tag color="#39539E">{text}</Tag>,
+      render: (value) => {
+        // Lookup the display name; default to raw value if not in map
+        const displayText = sourceMap[value] || value;
+        return <Tag color="#39539E">{displayText}</Tag>;
+      },
       onHeaderCell: () => ({
         style: {
           backgroundColor: '#3c4b64',

@@ -21,7 +21,7 @@ function AppContentHeader() {
         className="WelcomeAndSearch"
       >
         <h5 style={{ fontWeight: 'bolder' }}>
-          Welcome Back, {capitalizeFirstLetter(JSON.parse(localStorage.getItem('user')).username)}
+          Welcome Back, {capitalizeFirstLetter(JSON.parse(localStorage.getItem('user')).name)}
         </h5>
         <div className="SearchGlobal">
           <Input prefix={<BiSearch />} placeholder="Search..." size="middle" width={260} />

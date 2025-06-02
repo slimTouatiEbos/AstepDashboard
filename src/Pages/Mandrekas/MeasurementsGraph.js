@@ -14,6 +14,9 @@ const MeasurementsGraph = (props) => {
       colors: ['#008FFB'],
       xaxis: {
         type: 'datetime',
+        title: {
+          text: 'Date/Time', // <-- added x-axis title
+        },
         labels: {
           datetimeUTC: false,
           format: undefined,
@@ -27,6 +30,11 @@ const MeasurementsGraph = (props) => {
           },
         },
       },
+      yaxis: {
+        title: {
+          text: 'Mesurements (°C)', // <-- added y-axis title
+        },
+      },
       legend: {
         show: false,
       },
@@ -38,6 +46,11 @@ const MeasurementsGraph = (props) => {
           color: 'rgba(0, 0, 0, 0.45)',
           fontSize: '20px',
           fontFamily: undefined,
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: (val) => `${val} °C`, // <-- append °C
         },
       },
       // tooltip: {
