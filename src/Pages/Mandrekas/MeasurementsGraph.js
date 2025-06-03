@@ -1,3 +1,4 @@
+// MeasurementsGraph.jsx
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts'
@@ -10,10 +11,12 @@ const MeasurementsGraph = (props) => {
         group: 'social',
         type: 'line',
         height: 100,
+        toolbar: { show: false },
       },
       colors: ['#008FFB'],
       xaxis: {
         type: 'datetime',
+        title: { text: 'Time' },
         labels: {
           datetimeUTC: false,
           format: undefined,
@@ -27,9 +30,15 @@ const MeasurementsGraph = (props) => {
           },
         },
       },
-      legend: {
-        show: false,
+      yaxis: {
+        title: { text: 'Mesurements (°C)' },
       },
+      tooltip: {
+        y: {
+          formatter: (val) => `${val} °C`,
+        },
+      },
+      legend: { show: false },
       noData: {
         text: 'No data ',
         align: 'center',
@@ -37,31 +46,36 @@ const MeasurementsGraph = (props) => {
         style: {
           color: 'rgba(0, 0, 0, 0.45)',
           fontSize: '20px',
-          fontFamily: undefined,
         },
       },
     },
   })
+
   useEffect(() => {
-    setState({
-      series: props.GraphData?.map((item) => item.series),
-      options: { ...state.options, colors: props.GraphData.colors },
-    })
+    setState((prev) => ({
+      series: props.GraphData?.map((item) => item.series) || [],
+      options: {
+        ...prev.options,
+        colors: props.GraphData?.colors || prev.options.colors,
+      },
+    }))
   }, [props.GraphData])
+
   return (
-    <div>
-      <div id="wrapper">
-        <div id="chart-line">
-          <ReactApexChart options={state.options} series={state.series} type="line" height={400} />
-        </div>
-      </div>
-      <div id="html-dist"></div>
+    // Give this outer div a fixed id:
+    <div id="measurements-trends-chart">
+      <ReactApexChart
+        options={state.options}
+        series={state.series}
+        type="line"
+        height={400}
+      />
     </div>
   )
 }
 
-export default MeasurementsGraph
-
 MeasurementsGraph.propTypes = {
   GraphData: PropTypes.any,
 }
+
+export default MeasurementsGraph

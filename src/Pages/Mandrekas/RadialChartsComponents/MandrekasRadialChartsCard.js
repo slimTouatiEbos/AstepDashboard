@@ -1,9 +1,10 @@
-import { CCard, CCardBody, CCardHeader } from '@coreui/react'
-import React, { useEffect, useState } from 'react'
-import MandrekasSlider from './MandrekasSlider'
-import { getMandrekasRadialChartsData, getSensorList } from '../MandrekasHelpers'
+// MandrekasRadialChartsCard.jsx
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
+import { CCard, CCardBody, CCardHeader } from '@coreui/react'
 import RadialChartsFilter from './RadialChartsFilter'
+import MandrekasSlider from './MandrekasSlider'
+import MandrekasRadialCharts from './MandrekasRadialCharts'
 
 function MandrekasRadialChartsCard(props) {
   const [RadialChartsData, setRadialChartsData] = useState([])
@@ -33,18 +34,25 @@ function MandrekasRadialChartsCard(props) {
           SensorsList={SensorList}
           setSensorsList={setSensorList}
           setRadialChartsData={setRadialChartsData}
-        ></RadialChartsFilter>
+        />
       </CCardHeader>
       <CCardBody>
-        <MandrekasSlider RadialChartsData={RadialChartsData}></MandrekasSlider>
+        {/* Revert to original API: pass RadialChartsData as a prop */}
+        <MandrekasSlider RadialChartsData={RadialChartsData}>
+          {/* 
+            If your original <MandrekasSlider> accepted children, it would
+            render them, but since we’re restoring to the “RadialChartsData” API,
+            you don’t need to pass in any children here.
+          */}
+        </MandrekasSlider>
       </CCardBody>
     </CCard>
   )
 }
 
-export default MandrekasRadialChartsCard
-
 MandrekasRadialChartsCard.propTypes = {
-  JSONdata: PropTypes.any,
-  SensorsList: PropTypes.any,
+  JSONdata: PropTypes.array.isRequired,
+  SensorsList: PropTypes.array.isRequired,
 }
+
+export default MandrekasRadialChartsCard

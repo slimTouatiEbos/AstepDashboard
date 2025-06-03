@@ -120,7 +120,7 @@ const Login = () => {
                       >
                         Login
                       </CButton>
-                      <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+                      {/* <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
                         Still without an account?
                         <Button
                           style={{ fontWeight: 'bold' }}
@@ -129,7 +129,7 @@ const Login = () => {
                         >
                           Create one
                         </Button>
-                      </div>
+                      </div> */}
                     </CForm>
                   </CCardBody>
                 </CCard>
