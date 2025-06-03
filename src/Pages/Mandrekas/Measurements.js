@@ -1,5 +1,12 @@
+// Measurements.jsx
 import React, { useEffect, useState } from 'react'
 import '../../scss/style.scss'
+
+// 1) Import your three images (adjust paths if needed)
+import mandrekasImg from 'src/assets/images/mandrekas.png'
+import arcelorImg from 'src/assets/images/ArcelorMittal.png'
+import sensorsImg from 'src/assets/images/sensors.png'
+
 import MeasurementsTable from './MeasurementsTable'
 import MeasurementsGraph from './MeasurementsGraph'
 import {
@@ -28,7 +35,7 @@ import PropTypes from 'prop-types'
 // jsPDF & autoTable
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-// html2canvas for DOM snapshots
+// html2canvas
 import html2canvas from 'html2canvas'
 
 function Measurements(props) {
@@ -57,7 +64,6 @@ function Measurements(props) {
     )
   }, [TableData, JSONdata])
 
-  // Build rows (same as before)
   const buildTableRows = () => {
     return TableData.map((row) => [
       new Date(row.timestamp).toLocaleString('en-US'),
@@ -76,13 +82,13 @@ function Measurements(props) {
     const pageWidth = doc.internal.pageSize.getWidth()
     const pageHeight = doc.internal.pageSize.getHeight()
 
-    // 1) Title + timestamp
+    // Title & timestamp
     doc.setFontSize(18)
     doc.text('Sensors Measurements Report', pageWidth / 2, 40, { align: 'center' })
     doc.setFontSize(11)
     doc.text(`Generated: ${dayjs().format('YYYY-MM-DD HH:mm')}`, pageWidth / 2, 60, { align: 'center' })
 
-    // 2) Table via autoTable
+    // Table
     autoTable(doc, {
       startY: 80,
       head: [['Date & Time', 'Sensor', 'Measurement', 'Source']],
@@ -95,10 +101,9 @@ function Measurements(props) {
 
     let finalY = doc.lastAutoTable.finalY || 80
 
-    // 3) Capture “Measurements Trends” line chart
+    // Capture “Measurements Trends” chart
     const trendsNode = document.getElementById('measurements-trends-chart')
     if (trendsNode) {
-      // wait a tick so chart is fully rendered
       await new Promise((r) => setTimeout(r, 300))
       const canvas = await html2canvas(trendsNode, { scale: 2 })
       const imgData = canvas.toDataURL('image/png')
@@ -112,7 +117,7 @@ function Measurements(props) {
       finalY += 30 + 200 + 20
     }
 
-    // 4) Capture “All Sensors Min/Max/Avg” bar chart
+    // Capture bar chart
     const barNode = document.getElementById('all-sensors-bar-chart')
     if (barNode) {
       await new Promise((r) => setTimeout(r, 300))
@@ -128,7 +133,7 @@ function Measurements(props) {
       finalY += 30 + 200 + 20
     }
 
-    // 5) Capture each radial chart slide
+    // Capture radial charts
     const radialSlides = document.querySelectorAll('#radial-charts-container .radial-chart-slide')
     for (let i = 0; i < radialSlides.length; i++) {
       const slide = radialSlides[i]
@@ -139,11 +144,9 @@ function Measurements(props) {
         doc.addPage()
         finalY = 40
       }
-      // Assume each `.radial-chart-slide` has an inner <h3> with the sensor name
       const sensorName = slide.querySelector('h3')?.textContent || `Sensor ${i + 1}`
       doc.setFontSize(14)
       doc.text(`Sensor: ${sensorName}`, 40, finalY + 20)
-      // Center a 200×200 image
       doc.addImage(imgRadial, 'PNG', pageWidth / 2 - 100, finalY + 30, 200, 200)
       finalY += 30 + 200 + 20
     }
@@ -153,7 +156,33 @@ function Measurements(props) {
 
   return (
     <CContainer lg>
-      {/* Refresh + Export Buttons */}
+      {/* ─── 2) “Sensors Schematic” header w/ conditional image ─── */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '16px',
+        }}
+      >
+         <span style={{ fontSize: '20px', fontWeight: '600', marginLeft:'5%', marginRight:'5px'}}>
+          Sensors Schematic:
+        </span>
+
+        <img
+          src={
+            props.Source === 1
+              ? mandrekasImg
+              : props.Source === 2
+              ? arcelorImg
+              : sensorsImg
+          }
+          alt="Sensors Schematic"
+          style={{ width: '60%', height: '40%'}}
+        />
+       
+      </div>
+
+      {/* ─── Refresh / Export buttons ─── */}
       <div style={{ width: '100%', textAlign: 'right', margin: '5px -5%' }}>
         <CButton color="dark" onClick={() => window.location.reload()}>
           Refresh
@@ -163,7 +192,7 @@ function Measurements(props) {
         </CButton>
       </div>
 
-      {/* Filters + Table */}
+      {/* ─── Filters + Table ─── */}
       <CCard style={{ width: '90%', margin: '20px auto' }}>
         <CCardHeader
           style={{
@@ -204,7 +233,7 @@ function Measurements(props) {
         </CCardBody>
       </CCard>
 
-      {/* Measurements Trends Chart */}
+      {/* ─── Measurements Trends Chart ─── */}
       <CCard style={{ width: '100%', marginTop: '20px' }}>
         <CCardHeader
           style={{
@@ -228,11 +257,14 @@ function Measurements(props) {
           />
         </CCardHeader>
         <CCardBody>
-          <MeasurementsGraph GraphData={GraphData} />
+          {/* Give this wrapper an id so html2canvas can capture it */}
+          <div id="measurements-trends-chart">
+            <MeasurementsGraph GraphData={GraphData} />
+          </div>
         </CCardBody>
       </CCard>
 
-      {/* All Sensors Min/Max/Avg Bar Chart */}
+      {/* ─── All Sensors Min/Max/Avg Bar Chart ─── */}
       <CCard style={{ width: '100%', marginTop: '20px' }}>
         <CCardHeader
           style={{
@@ -247,11 +279,14 @@ function Measurements(props) {
           Min/Max/Average Measurements (all Sensors)
         </CCardHeader>
         <CCardBody>
-          <AllSensorsMinMaxAvgBarChart ChartData={AllSensorsMinMaxAvgData} />
+          {/* Give this wrapper an id so html2canvas can capture it */}
+          <div id="all-sensors-bar-chart">
+            <AllSensorsMinMaxAvgBarChart ChartData={AllSensorsMinMaxAvgData} />
+          </div>
         </CCardBody>
       </CCard>
 
-      {/* Radial Charts per Sensor */}
+      {/* ─── Radial Charts per Sensor ─── */}
       <div style={{ marginTop: '20px' }}>
         <MandrekasRadialChartsCard
           JSONdata={TableData}
