@@ -1,20 +1,15 @@
 import PropTypes from 'prop-types'
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import '../../../index.css'
-import { FaAngleLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import MandrekasRadialCharts from './MandrekasRadialCharts'
-import RadialChart from 'src/components/Charts/RadialChart'
-import CIcon from '@coreui/icons-react'
-import { cilArrowThickLeft, cilArrowThickRight } from '@coreui/icons'
-import Icon, { RightOutlined, LeftOutlined } from '@ant-design/icons'
-import MandrekasBarChart from './MandrekasSensorMinMaxAvgBarChart'
 import MandrekasSensorMinMaxAvgBarChart from './MandrekasSensorMinMaxAvgBarChart'
 
 function SampleNextArrow(props) {
-  const { className, style, onClick } = props
+  const { className, onClick } = props
   return (
     <RightOutlined
       id="NextArrow"
@@ -23,8 +18,8 @@ function SampleNextArrow(props) {
         color: '#0084ff',
         cursor: 'pointer',
         fontSize: '50px',
-        position: 'absolute', // Correctly position the arrow
-        right: '10px', // Ensure it stays within bounds
+        position: 'absolute',
+        right: '10px',
         top: '50%',
         transform: 'translateY(-50%)',
       }}
@@ -34,7 +29,7 @@ function SampleNextArrow(props) {
 }
 
 function SamplePrevArrow(props) {
-  const { className, style, onClick } = props
+  const { className, onClick } = props
   return (
     <LeftOutlined
       id="PrevArrow"
@@ -43,8 +38,8 @@ function SamplePrevArrow(props) {
         color: '#0084ff',
         cursor: 'pointer',
         fontSize: '50px',
-        position: 'absolute', // Correctly position the arrow
-        //   left: '10px', // Ensure it stays within bounds
+        position: 'absolute',
+        left: '10px',
         top: '50%',
         transform: 'translateY(-50%)',
       }}
@@ -55,7 +50,7 @@ function SamplePrevArrow(props) {
 
 function MandrekasSlider(props) {
   const settings = {
-    lazyLoad:"ondemand",
+    lazyLoad: 'ondemand',
     dots: false,
     infinite: false,
     slidesToShow: 3,
@@ -93,17 +88,6 @@ function MandrekasSlider(props) {
 
   const [ChartsData, setChartsData] = useState(props.RadialChartsData)
 
-  // useEffect(() => {
-  //   setChartsData(props.RadialChartsData)
-  //   var PrevArrow = document.getElementById('PrevArrow')
-  //   PrevArrow && PrevArrow.click()
-  // }, [props.RadialChartsData])
-
-  // useEffect(() => {
-  //   var PrevArrow = document.getElementById('PrevArrow')
-  //   PrevArrow && PrevArrow.click()
-  //   // PrevArrow.click()
-  // }, [ChartsData])
   useEffect(() => {
     setChartsData(props.RadialChartsData)
     requestAnimationFrame(() => {
@@ -111,67 +95,68 @@ function MandrekasSlider(props) {
       PrevArrow?.click()
     })
   }, [props.RadialChartsData])
-  
-  //console.log(ChartsData)
 
   return (
     <>
+      {/* Hide Slick’s default arrow icons (the black squares) */}
+      <style>
+        {`
+          .slick-prev:before,
+          .slick-next:before {
+            display: none !important;
+          }
+        `}
+      </style>
+
       <div className="slider-container" style={{ width: '100%', position: 'relative' }}>
         <Slider {...settings}>
           {ChartsData &&
-            ChartsData?.map((item, index) => {
-              // console.log(item)
-
-              return (
-                <div key={index} className="chart-item">
-                  <MandrekasRadialCharts
-                    key={index}
-                    sensor={item?.sensor}
-                    max={item?.max}
-                    average={item?.average}
-                    min={item?.min}
-                  />
-                </div>
-              )
-            })}
+            ChartsData.map((item, index) => (
+              <div key={index} className="chart-item">
+                <MandrekasRadialCharts
+                  key={index}
+                  sensor={item?.sensor}
+                  max={item?.max}
+                  average={item?.average}
+                  min={item?.min}
+                />
+              </div>
+            ))}
         </Slider>
       </div>
+
       <div className="slider-container" style={{ width: '100%', position: 'relative' }}>
         <Slider {...settings}>
           {ChartsData &&
-            ChartsData?.map((item, index) => {
-              return (
-                <div key={index} className="chart-item">
-                  <MandrekasSensorMinMaxAvgBarChart
-                    key={index}
-                    sensor={item?.sensor}
-                    max={item?.max}
-                    average={item?.average}
-                    min={item?.min}
-                  />
-                </div>
-              )
-            })}
+            ChartsData.map((item, index) => (
+              <div key={index} className="chart-item">
+                <MandrekasSensorMinMaxAvgBarChart
+                  key={index}
+                  sensor={item?.sensor}
+                  max={item?.max}
+                  average={item?.average}
+                  min={item?.min}
+                />
+              </div>
+            ))}
         </Slider>
       </div>
     </>
   )
 }
 
-export default MandrekasSlider
+MandrekasSlider.propTypes = {
+  RadialChartsData: PropTypes.array,
+}
 
 SampleNextArrow.propTypes = {
-  className: PropTypes.any,
-  onClick: PropTypes.any,
-  style: PropTypes.any,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
 }
 
 SamplePrevArrow.propTypes = {
-  className: PropTypes.any,
-  onClick: PropTypes.any,
-  style: PropTypes.any,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
 }
 
-MandrekasSlider.propTypes = {
-  RadialChartsData: PropTypes.any,
-}
+export default MandrekasSlider

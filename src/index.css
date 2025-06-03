@@ -158,3 +158,15 @@
 .apexcharts-tooltip-marker {
   margin-right: 10px !important;
 }
+/* 1) Remove any default background the slick span might have */
+.slick-prev,
+.slick-next {
+  background: none !important;
+}
+
+/* 2) When Slick adds “slick-disabled” (i.e. arrow inactive), hide the entire span */
+.slick-prev.slick-disabled,
+.slick-next.slick-disabled {
+  visibility: hidden !important;
+}
+

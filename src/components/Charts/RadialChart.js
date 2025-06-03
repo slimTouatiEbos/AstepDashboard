@@ -1,33 +1,33 @@
-import React, { useState } from 'react'
+// RadialChart.jsx
+import React, {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 import PropTypes from 'prop-types'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
+import html2canvas from 'html2canvas'
 
-const RadialChart = ({ labels, series }) => {
+const RadialChart = forwardRef(({ labels, series }, ref) => {
   const [hoveredIndex, setHoveredIndex] = useState(null)
+  const containerRef = useRef(null) // wrap the entire chart in a <div> for html2canvas
 
   // series: [max, average, min]
   const rawSeries = series || []
-  const maxVal = rawSeries[0] ? rawSeries[0] : 1 // avoid division by zero
+  const maxVal = rawSeries[0] || 1
 
-  // Compute fill percentages based on max:
-  // - Outer ring (max): always 100%
-  // - Middle ring (average): (average / max) * 100
-  // - Inner ring (min): if negative, fill = 0; otherwise (min / max) * 100
   const computedFill = [
     100,
     rawSeries[1] !== undefined ? (rawSeries[1] / maxVal) * 100 : 0,
     rawSeries[2] !== undefined ? (rawSeries[2] < 0 ? 0 : (rawSeries[2] / maxVal) * 100) : 0,
   ]
 
-  // Define colors for each ring and a grey trail for the incomplete portion
   const colors = ['#1ab7ea', '#0084ff', '#ffc300']
   const trailColor = '#d6d6d6'
-
-  // Container size (adjust as needed)
   const containerSize = 250
 
-  // Helper function for container styles: Only change brightness on hover.
   const getRingContainerStyle = (index, top, left, width, height) => ({
     position: 'absolute',
     top,
@@ -38,8 +38,20 @@ const RadialChart = ({ labels, series }) => {
     filter: hoveredIndex === index ? 'brightness(1.1)' : 'brightness(1)',
   })
 
+  // Expose an async getImage() to parent (returns base64 PNG)
+  useImperativeHandle(ref, () => ({
+    getImage: async () => {
+      if (!containerRef.current) return null
+      const canvas = await html2canvas(containerRef.current, { backgroundColor: null, scale: 2 })
+      return canvas.toDataURL('image/png')
+    },
+  }))
+
   return (
-    <div style={{ position: 'relative', width: containerSize, height: containerSize }}>
+    <div
+      ref={containerRef}
+      style={{ position: 'relative', width: containerSize, height: containerSize }}
+    >
       {/* Outer ring (Max) */}
       <div
         onMouseEnter={() => setHoveredIndex(0)}
@@ -51,7 +63,7 @@ const RadialChart = ({ labels, series }) => {
           strokeWidth={8}
           styles={buildStyles({
             pathColor: colors[0],
-            trailColor: trailColor,
+            trailColor,
           })}
         />
       </div>
@@ -66,7 +78,7 @@ const RadialChart = ({ labels, series }) => {
           strokeWidth={8}
           styles={buildStyles({
             pathColor: colors[1],
-            trailColor: trailColor,
+            trailColor,
           })}
         />
       </div>
@@ -81,12 +93,12 @@ const RadialChart = ({ labels, series }) => {
           strokeWidth={8}
           styles={buildStyles({
             pathColor: colors[2],
-            trailColor: trailColor,
+            trailColor,
           })}
         />
       </div>
 
-      {/* Center text: show only hovered ring’s title and value; otherwise, show all */}
+      {/* Center text */}
       <div
         style={{
           position: 'absolute',
@@ -98,12 +110,12 @@ const RadialChart = ({ labels, series }) => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          pointerEvents: 'none', // allow clicks to pass through
+          pointerEvents: 'none',
         }}
       >
         {hoveredIndex !== null ? (
-          <div style={{ fontSize: 14, color: colors[hoveredIndex], fontWeight: 'bold' }}>
-            {labels && labels[hoveredIndex]
+          <div style={{ fontSize: 16, color: colors[hoveredIndex], fontWeight: 'bold' }}>
+            {labels?.[hoveredIndex]
               ? `${labels[hoveredIndex]}: ${rawSeries[hoveredIndex]} °C`
               : `${hoveredIndex === 0 ? 'Max' : hoveredIndex === 1 ? 'Avg' : 'Min'}: ${
                   rawSeries[hoveredIndex]
@@ -111,27 +123,21 @@ const RadialChart = ({ labels, series }) => {
           </div>
         ) : (
           <>
-            <div style={{ fontSize: 12, color: colors[0], marginBottom: 3, fontWeight: 'bold' }}>
-              {labels && labels[0]
-                ? `${labels[0]}: ${rawSeries[0]} °C`
-                : `Max: ${rawSeries[0]} °C`}
+            <div style={{ fontSize: 14, color: colors[0], marginBottom: 3, fontWeight: 'bold' }}>
+              {labels?.[0] ? `${labels[0]}: ${rawSeries[0]} °C` : `Max: ${rawSeries[0]} °C`}
             </div>
-            <div style={{ fontSize: 12, color: colors[1], marginBottom: 3, fontWeight: 'bold' }}>
-              {labels && labels[1]
-                ? `${labels[1]}: ${rawSeries[1]} °C`
-                : `Avg: ${rawSeries[1]} °C`}
+            <div style={{ fontSize: 14, color: colors[1], marginBottom: 3, fontWeight: 'bold' }}>
+              {labels?.[1] ? `${labels[1]}: ${rawSeries[1]} °C` : `Avg: ${rawSeries[1]} °C`}
             </div>
-            <div style={{ fontSize: 12, color: colors[2], fontWeight: 'bold' }}>
-              {labels && labels[2]
-                ? `${labels[2]}: ${rawSeries[2]} °C`
-                : `Min: ${rawSeries[2]} °C`}
+            <div style={{ fontSize: 14, color: colors[2], fontWeight: 'bold' }}>
+              {labels?.[2] ? `${labels[2]}: ${rawSeries[2]} °C` : `Min: ${rawSeries[2]} °C`}
             </div>
           </>
         )}
       </div>
     </div>
   )
-}
+})
 
 RadialChart.propTypes = {
   labels: PropTypes.arrayOf(PropTypes.string),
